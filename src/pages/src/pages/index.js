@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SignInWithBase } from '../components/SignInWithBase'; 
-import { MintNFT } from '../components/MintNFT'; 
-import { BaseVerify } from '../components/BaseVerify'; // <-- Notun import
-import { BaseSolanaBridge } from '../components/BaseSolanaBridge'; // <-- Notun import
+import { BaseVerify } from '../components/BaseVerify'; // Notun import
+import { BaseSolanaBridge } from '../components/BaseSolanaBridge'; // Notun import
 import { ethers } from 'ethers';
 
 export default function Home() { 
@@ -35,7 +34,6 @@ export default function Home() {
         <h1 style={{ color: '#0052FF' }}>Base Onchain Hub</h1>
         <p>Your ultimate dApp built on Base! Connect your Base Account to explore.</p>
         
-        {/* Base Account universal login component */}
         <div style={{ margin: '20px 0' }}>
             <SignInWithBase /> 
         </div>
@@ -48,10 +46,8 @@ export default function Home() {
           </div>
         )}
 
+        {/* Notun Features */}
         <BaseVerify />
-        
-        <MintNFT /> 
-
         <BaseSolanaBridge />
 
         {/* Builder Code Analytics Note */}
