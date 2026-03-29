@@ -1,0 +1,35 @@
+import React, { useState, useEffect } from 'react';
+import { SignInWithBase } from '../components/SignInWithBase'; 
+import { MintNFT } from '../components/MintNFT'; 
+import { BaseVerify } from '../components/BaseVerify'; 
+import { BaseSolanaBridge } from '../components/BaseSolanaBridge'; 
+import { OnchainKitPaymaster } from '../components/OnchainKitPaymaster'; // <-- Notun import
+import { FlashblocksTracker } from '../components/FlashblocksTracker'; // <-- Notun import
+import { ethers } from 'ethers';
+
+export default function Home() { 
+  // ... (Ager balance state ebong useEffect code thakbe) ...
+
+  return ( 
+    <main style={{ padding: '50px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f4f4f9' }}> 
+      <div style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'white', padding: '30px', borderRadius: '10px' }}>
+        <h1 style={{ color: '#0052FF' }}>Base Onchain Hub</h1>
+        <p>Your ultimate A-Z dApp built on Base! Connect your Base Account to explore.</p>
+        
+        <div style={{ margin: '20px 0' }}>
+            <SignInWithBase /> 
+        </div>
+
+        <FlashblocksTracker />
+        <OnchainKitPaymaster />
+        <BaseVerify />
+        <MintNFT /> 
+        <BaseSolanaBridge />
+
+        <div style={{ marginTop: '40px', textAlign: 'center', color: '#666' }}>
+          <p><small>Analytics tracking powered by <strong>ERC-8021 Builder Codes</strong> on base.dev</small></p>
+        </div>
+      </div>
+    </main> 
+  ); 
+}
