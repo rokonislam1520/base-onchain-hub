@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="talentapp:project_verification" content="REPLACE_WITH_YOUR_VERIFICATION_CODE" />
+  <title>Base Onchain Hub — The Ultimate Base Ecosystem dApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #020408;
+      --surface: #060C14;
+      --card: #091018;
+      --border: rgba(0,82,255,0.12);
+      --blue: #0052FF;
+      --blue-bright: #3377FF;
+      --blue-dim: rgba(0,82,255,0.08);
+      --blue-border: rgba(0,82,255,0.25);
+      --cyan: #00D4FF;
+      --cyan-dim: rgba(0,212,255,0.08);
+      --green: #00E676;
+      --green-dim: rgba(0,230,118,0.08);
+      --purple: #A855F7;
+      --white: #E8EEFF;
+      --muted: #7080A0;
+      --dim: #2A3550;
+      --mono: 'Fira Code', monospace;
+      --sans: 'Outfit', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--white); overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+
+    /* NOISE + GRID */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -20%, rgba(0,82,255,0.12) 0%, transparent 60%),
+        linear-gradient(rgba(0,82,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,82,255,0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 56px 56px, 56px 56px;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 2.5rem;
+      background: rgba(2,4,8,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; }
+    .logo-circle {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: #fff;
+      font-family: var(--mono);
+    }
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-link { font-size: 13px; color: var(--muted); transition: color 0.2s; }
+    .nav-link:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--blue); color: #fff;
+      font-size: 13px; font-weight: 600;
+      padding: 8px 20px; border-radius: 8px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--blue-bright); transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+      padding: 6rem 2.5rem 3rem;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue-dim);
+      border: 1px solid var(--blue-border);
+      color: var(--blue-bright);
+      font-size: 11px; font-family: var(--mono);
+      padding: 5px 14px; border-radius: 999px;
+      margin-bottom: 2rem; letter-spacing: 0.05em;
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+    h1 {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800; line-height: 1.06;
+      letter-spacing: -0.035em; margin-bottom: 1.5rem;
+    }
+    .blue { color: var(--blue-bright); }
+    .cyan { color: var(--cyan); }
+    .hero-sub {
+      font-size: 17px; color: var(--muted); line-height: 1.75;
+      max-width: 560px; font-weight: 300; margin-bottom: 3rem;
+    }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue); color: #fff;
+      font-size: 14px; font-weight: 600;
+      padding: 13px 28px; border-radius: 10px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--blue-bright); transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--white);
+      font-size: 14px; font-weight: 500;
+      padding: 13px 28px; border-radius: 10px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--blue-border); background: var(--blue-dim); }
+
+    /* INTEGRATIONS */
+    .integrations {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+      padding: 1rem 2.5rem 5rem;
+    }
+    .int-label {
+      font-size: 11px; font-family: var(--mono);
+      color: var(--muted); letter-spacing: 0.08em;
+      margin-bottom: 1.25rem;
+    }
+    .int-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .int-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.5rem;
+      display: flex; align-items: flex-start; gap: 14px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .int-card:hover { border-color: var(--blue-border); background: rgba(0,82,255,0.04); }
+    .int-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .int-info {}
+    .int-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .int-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .int-tag {
+      display: inline-block; margin-top: 8px;
+      font-size: 10px; font-family: var(--mono);
+      padding: 2px 8px; border-radius: 4px;
+    }
+
+    /* STATS */
+    .stats {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+    .stat {
+      text-align: center; padding: 2.5rem 1rem;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-size: 28px; font-weight: 800;
+      font-family: var(--mono);
+      color: var(--blue-bright);
+      letter-spacing: -0.02em;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* FEATURES */
+    .features {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+      padding: 5rem 2.5rem;
+    }
+    .feat-header { margin-bottom: 2.5rem; }
+    .feat-tag {
+      font-size: 11px; font-family: var(--mono);
+      color: var(--blue-bright); letter-spacing: 0.08em; margin-bottom: 0.75rem;
+    }
+    h2 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+    }
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    }
+    .feat {
+      background: var(--bg); padding: 1.75rem;
+      transition: background 0.2s;
+    }
+    .feat:hover { background: var(--card); }
+    .feat-emoji { font-size: 22px; margin-bottom: 12px; }
+    .feat-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .feat-desc { font-size: 12px; color: var(--muted); line-height: 1.65; }
+
+    /* CTA */
+    .cta {
+      position: relative; z-index: 1;
+      padding: 4rem 2.5rem; display: flex; justify-content: center;
+    }
+    .cta-box {
+      max-width: 620px; width: 100%; text-align: center;
+      background: var(--card);
+      border: 1px solid var(--blue-border);
+      border-radius: 20px; padding: 4rem 3rem;
+    }
+    .cta-badge {
+      display: inline-block; margin-bottom: 1.25rem;
+      font-size: 11px; font-family: var(--mono);
+      background: var(--blue-dim); border: 1px solid var(--blue-border);
+      color: var(--blue-bright);
+      padding: 4px 14px; border-radius: 999px; letter-spacing: 0.06em;
+    }
+    .cta-title { font-size: clamp(22px, 3vw, 32px); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.75rem; }
+    .cta-sub { color: var(--muted); font-size: 14px; margin-bottom: 2rem; line-height: 1.7; }
+
+    /* FOOTER */
+    footer {
+      position: relative; z-index: 1;
+      padding: 2rem 2.5rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-left { font-size: 12px; color: var(--dim); font-family: var(--mono); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: var(--dim); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--blue-bright); }
+
+    @media(max-width:600px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      .hero, .integrations, .features { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .cta { padding: 3rem 1.25rem; }
+      .cta-box { padding: 2.5rem 1.5rem; }
+      footer { padding: 1.5rem 1.25rem; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="logo-circle">B</div>
+    Base Onchain Hub
+  </div>
+  <div class="nav-links">
+    <a href="https://github.com/rokonislam1520/base-onchain-hub" target="_blank" class="nav-link">GitHub</a>
+    <a href="https://docs.base.org" target="_blank" class="nav-link">Base Docs</a>
+    <a href="https://github.com/rokonislam1520/base-onchain-hub" target="_blank" class="nav-cta">View project</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="live-dot"></span>
+    Built on Base · L2 · EVM Compatible
+  </div>
+  <h1>The ultimate<br /><span class="blue">Base ecosystem</span><br />dApp</h1>
+  <p class="hero-sub">
+    A complete Web3 decentralized application integrating Base Account, Base Pay,
+    Farcaster, Aave, 0x, Across, and AI agents — all in one hub.
+  </p>
+  <div class="hero-btns">
+    <a href="https://github.com/rokonislam1520/base-onchain-hub" target="_blank" class="btn-primary">
+      Explore on GitHub
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="https://docs.base.org" target="_blank" class="btn-outline">Base Docs</a>
+  </div>
+</section>
+
+<section class="integrations">
+  <div class="int-label">// integrations</div>
+  <div class="int-grid">
+    <div class="int-card">
+      <div class="int-icon" style="background:rgba(0,82,255,0.12);border:1px solid rgba(0,82,255,0.2);">🔵</div>
+      <div class="int-info">
+        <div class="int-name">Base Account</div>
+        <div class="int-desc">Universal login with Smart Wallet and Base Names for seamless onchain identity.</div>
+        <span class="int-tag" style="background:rgba(0,82,255,0.1);color:#3377FF;border:1px solid rgba(0,82,255,0.2);">identity</span>
+      </div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon" style="background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.2);">💸</div>
+      <div class="int-info">
+        <div class="int-name">Base Pay</div>
+        <div class="int-desc">Near-zero cost USDC payments on Base L2 — fast, cheap, and fully onchain.</div>
+        <span class="int-tag" style="background:rgba(0,230,118,0.1);color:#00E676;border:1px solid rgba(0,230,118,0.2);">payments</span>
+      </div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);">🟣</div>
+      <div class="int-info">
+        <div class="int-name">Farcaster</div>
+        <div class="int-desc">Social graphing integration for decentralized identity and community features.</div>
+        <span class="int-tag" style="background:rgba(168,85,247,0.1);color:#A855F7;border:1px solid rgba(168,85,247,0.2);">social</span>
+      </div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">🏦</div>
+      <div class="int-info">
+        <div class="int-name">Aave & 0x</div>
+        <div class="int-desc">DeFi lending, borrowing, and token swaps powered by Aave and 0x Protocol.</div>
+        <span class="int-tag" style="background:rgba(0,212,255,0.1);color:#00D4FF;border:1px solid rgba(0,212,255,0.2);">DeFi</span>
+      </div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon" style="background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.2);">🌉</div>
+      <div class="int-info">
+        <div class="int-name">Across Bridge</div>
+        <div class="int-desc">Cross-chain bridging via Across Protocol for seamless asset transfers between chains.</div>
+        <span class="int-tag" style="background:rgba(255,184,0,0.1);color:#FFB800;border:1px solid rgba(255,184,0,0.2);">bridge</span>
+      </div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon" style="background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.2);">🤖</div>
+      <div class="int-info">
+        <div class="int-name">AI Agents</div>
+        <div class="int-desc">AgentiPy-powered AI agents for intelligent onchain automation and operations.</div>
+        <span class="int-tag" style="background:rgba(0,230,118,0.1);color:#00E676;border:1px solid rgba(0,230,118,0.2);">AI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><div class="stat-num">6+</div><div class="stat-label">integrations</div></div>
+  <div class="stat"><div class="stat-num">L2</div><div class="stat-label">Base network</div></div>
+  <div class="stat"><div class="stat-num">~$0</div><div class="stat-label">gas fees</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">decentralized</div></div>
+</section>
+
+<section class="features">
+  <div class="feat-header">
+    <div class="feat-tag">// what's inside</div>
+    <h2>Everything onchain,<br />nothing centralized</h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat"><div class="feat-emoji">🔐</div><div class="feat-title">Smart Wallet login</div><div class="feat-desc">Connect with Base Account for universal, gasless wallet login and Base Names identity.</div></div>
+    <div class="feat"><div class="feat-emoji">⚡</div><div class="feat-title">Instant USDC payments</div><div class="feat-desc">Send and receive USDC on Base L2 with near-zero fees using Base Pay.</div></div>
+    <div class="feat"><div class="feat-emoji">📊</div><div class="feat-title">DeFi dashboard</div><div class="feat-desc">Lend, borrow, and swap tokens via Aave and 0x directly from the hub.</div></div>
+    <div class="feat"><div class="feat-emoji">🌐</div><div class="feat-title">Cross-chain bridge</div><div class="feat-desc">Move assets across chains instantly with Across Protocol integration.</div></div>
+    <div class="feat"><div class="feat-emoji">🤖</div><div class="feat-title">AI-powered agents</div><div class="feat-desc">Automate onchain tasks with AgentiPy AI agents running on Base.</div></div>
+    <div class="feat"><div class="feat-emoji">🟣</div><div class="feat-title">Farcaster social</div><div class="feat-desc">Tap into Farcaster's social graph for decentralized community features.</div></div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="cta-box">
+    <div class="cta-badge">// open source</div>
+    <div class="cta-title">Build on Base with us</div>
+    <p class="cta-sub">Full source code available on GitHub. Fork it, extend it, deploy it — the entire Base ecosystem in one place.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://github.com/rokonislam1520/base-onchain-hub" target="_blank" class="btn-primary">
+        View on GitHub →
+      </a>
+      <a href="https://base.org" target="_blank" class="btn-outline">Learn about Base</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">// rokonislam1520 · built on Base</div>
+  <div class="footer-links">
+    <a href="https://github.com/rokonislam1520" target="_blank">GitHub</a>
+    <a href="https://base.org" target="_blank">Base</a>
+    <a href="https://docs.base.org" target="_blank">Docs</a>
+  </div>
+</footer>
+
+</body>
+</html>
